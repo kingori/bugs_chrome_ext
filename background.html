@@ -1,0 +1,54 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+<<script type="text/javascript" src="jquery.1.7.1.min.js"></script>
+<script type="text/javascript">
+chrome.browserAction.onClicked.addListener(showBugsPlayer);
+
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+	if (request.name === "showBugsPlayer") {
+		showBugsPlayer();
+	} else if (request.name === "pauseResumeBugsPlayer") {
+		pauseResumeBugsPlayer();
+	} else if (request.name === "nextBugsPlayer") {
+		nextBugsPlayer();
+	}
+});
+
+function showBugsPlayer() {
+	commandBugsPlayerTab(function(bugsTab) {
+		chrome.tabs.update(bugsTab.id, {
+			active: true
+		}, null);
+	});
+}
+
+function commandBugsPlayerTab(callback) {
+	chrome.tabs.query({
+		title: "벅스 음악 플레이어!"
+	}, function(tabs) {
+		if (tabs) {
+			callback(tabs[0]);
+			return;
+		}
+	});
+}
+
+function pauseResumeBugsPlayer() {
+	commandBugsPlayerTab(function(bugsTab) {
+		chrome.tabs.sendRequest(bugsTab.id, {
+			'action': 'pause'
+		});
+	});
+}
+
+function nextBugsPlayer() {
+	commandBugsPlayerTab(function(bugsTab) {
+		chrome.tabs.sendRequest(bugsTab.id, {
+			'action': 'next'
+		});
+	});
+}
+</script>
+</head>
+</html>

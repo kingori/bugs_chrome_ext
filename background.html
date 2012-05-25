@@ -12,6 +12,8 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 		pauseResumeBugsPlayer();
 	} else if (request.name === "nextBugsPlayer") {
 		nextBugsPlayer();
+	} else if (request.name === "showMusicInfoNoti") {
+		showMusicInfoNoti(request.info)
 	}
 });
 
@@ -49,6 +51,26 @@ function nextBugsPlayer() {
 		});
 	});
 }
+
+function showMusicInfoNoti(music_info) {
+	var notification = webkitNotifications.createNotification('logo_bugs.gif', // icon url - can be relative
+	'Playing ' + music_info, // notification title
+	'' // notification body text
+	);
+	notification.onclick = function() {
+		// chrome.extension.sendRequest({
+		// 	name: "showBugsPlayer"
+		// });
+		showBugsPlayer();
+		notification.cancel();
+	};
+	setTimeout(function() {
+		notification.cancel();
+	}, 5000);
+	notification.show();
+
+}
+
 </script>
 </head>
 </html>
